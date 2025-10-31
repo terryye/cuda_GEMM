@@ -1,4 +1,4 @@
-#include "../../util/cuda_shim.h"
+#include "util/cuda_shim.h"
 
 __global__ void GEMM(float *d_A, float *d_B, float *d_C, int M, int K, int N, float alpha, float beta, bool transA, bool transB) {
    // printf("current block: (%d,%d), thread (%d,%d) , block dim (%d, %d)\n", blockIdx.x,  blockIdx.y, threadIdx.x, threadIdx.y, blockDim.x, blockDim.y);

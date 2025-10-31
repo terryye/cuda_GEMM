@@ -1,4 +1,4 @@
-#include "../../util/cuda_shim.h"
+#include "util/cuda_shim.h"
 #define TILE_WIDTH 16
 
 __global__ void GEMM(float *d_A, float *d_B, float *d_C, int M, int K, int N, float alpha, float beta, bool transA, bool transB) {

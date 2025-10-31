@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "../../util/cuda_shim.h"
-#include "../../util/color.h"
-#include "../../util/float_eq.h"
-#include "../../util/time.h"
+#include "util/cuda_shim.h"
+#include "util/color.h"
+#include "util/float_eq.h"
+#include "util/time.h"
 #include "./GEMM.cu"
 
 void print_matrix(float* matrix, int row, int col) {
