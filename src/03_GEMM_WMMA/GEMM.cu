@@ -3,6 +3,8 @@
 
 using namespace nvcuda;
 
+//For WMMA (Warp Matrix Multiply-Accumulate), we generally use FP16 (half-precision) for input data (A and B matrices) because it's faster and uses less memory, but accumulate the results into an FP32 (single-precision) accumulator for better accuracy, preventing precision loss, especially in deep learning
+
 // WMMA tile dimensions: M, N, K = 16, 16, 16 for fp16
 #define WMMA_M 16
 #define WMMA_N 16
