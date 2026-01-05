@@ -80,3 +80,12 @@ __device__ __host__ inline void swap_float_ptrs(float** a, float** b) {
             assert(0); \
         } \
     } while(0)
+
+#define CHECK_CUBLAS(call)   \
+    do {            \
+        cublasStatus_t status = call;         \
+        if (status != CUBLAS_STATUS_SUCCESS) {        \
+            fprintf(stderr, "cuBLAS error at %s:%d - code %d\n", __FILE__, __LINE__, status); \
+            assert(0); \
+        } \
+    } while(0)

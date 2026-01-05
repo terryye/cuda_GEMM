@@ -23,6 +23,6 @@ def compile_and_run_cuda(code_path: str):
     import subprocess
 
     subprocess.run(["nvcc", "-DCUDA=1", "-g", "-G", "-rdc=true", "-arch=native", "-I/root",
-                    code_path, "-o", "output.bin"],
+                    code_path, "-o", "output.bin", "-lcublas", "-lcublasLt"],
                    text=True,  check=True)
     subprocess.run([ "./output.bin"], text=True, check=True)
