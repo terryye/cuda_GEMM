@@ -1,0 +1,6 @@
+{
+    "recommendations": [
+        // nsight-vscode
+        "nvidia.nsight-vscode-edition"
+    ]
+}

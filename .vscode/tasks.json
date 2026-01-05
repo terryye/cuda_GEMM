@@ -1,0 +1,37 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "nvcc build active file",
+            "type": "shell",
+            "command": "mkdir",
+            "args": [
+                "-p",
+                "${fileDirname}/bin",
+                "&&",
+                "nvcc",
+                "-DCUDA=1",
+                "-g",
+                "-G",
+                "-rdc=true",
+                "-lstdc++",
+                "-lm",
+                "-lcudart",
+                "-lcudadevrt",
+                "-I${workspaceFolder}",
+                "${file}",
+                "-o",
+                "${fileDirname}/bin/${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": ["$nvcc"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Compiler: nvcc with debug flags, CUDA definitions, and MPI support"
+        }
+    ]
+}
