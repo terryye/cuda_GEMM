@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <cublasLt.h>
+#include <cublas_v2.h>
 #include "util/cuda_helper.h"
 
 // Host-side GEMM using cuBLASLt (row-major layouts).
+// Computes: C (row-major MxN) = alpha * opA(A) * opB(B) + beta * C
+// cuBLAS using column-major layout defaultly, so we need to adjust the operation accordingly.
 
 void GEMM(float* d_A, float* d_B, float* d_C, int M, int K, int N,
     float alpha, float beta, bool transA, bool transB) {
@@ -77,4 +80,38 @@ void GEMM(float* d_A, float* d_B, float* d_C, int M, int K, int N,
     cublasLtMatrixLayoutDestroy(layoutC);
     cublasLtMatmulDescDestroy(opDesc);
     cublasLtDestroy(handle);
+}
+
+// Row-major GEMM using cublasGemmEx by swapping operands and transposes.
+// Computes: C (row-major MxN) = alpha * opA(A) * opB(B) + beta * C
+void GEMM_cublas(float* d_A, float* d_B, float* d_C, int M, int K, int N,
+    float alpha, float beta, bool transA, bool transB) {
+    cublasHandle_t handle;
+    CHECK_CUBLAS(cublasCreate(&handle));
+
+    // Map row-major to column-major: C_row^T = opB_cm(B_row^T) * opA_cm(A_row^T)
+    cublasOperation_t opA_cm = transB ? CUBLAS_OP_T : CUBLAS_OP_N; // uses B data
+    cublasOperation_t opB_cm = transA ? CUBLAS_OP_T : CUBLAS_OP_N; // uses A data
+
+    int m = N; // rows of B_row^T
+    int n = M; // cols of A_row^T
+    int k = K;
+
+    int lda = (opA_cm == CUBLAS_OP_N) ? N : K; // B_row^T dims: N x K
+    int ldb = (opB_cm == CUBLAS_OP_N) ? K : M; // A_row^T dims: K x M
+    int ldc = N; // C_row^T dims: N x M
+
+    CHECK_CUBLAS(cublasGemmEx(
+        handle,
+        opA_cm, opB_cm,
+        m, n, k,
+        &alpha,
+        d_B, CUDA_R_32F, lda,
+        d_A, CUDA_R_32F, ldb,
+        &beta,
+        d_C, CUDA_R_32F, ldc,
+        CUDA_R_32F,
+        CUBLAS_GEMM_DEFAULT));
+
+    cublasDestroy(handle);
 }
