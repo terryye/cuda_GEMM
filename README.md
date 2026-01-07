@@ -66,6 +66,8 @@ cd src/01_GEMM        # or 02_GEMM_TILING, 03_GEMM_WMMA, 04_GEMM_BLASLt
 -   `scripts/install.sh`: Convenience setup for a Linux CUDA environment.
 -   `scripts/local_gpu.sh`: Example launcher for local GPU runs.
 -   `scripts/modal_nvcc.py`: Modal helper for cloud-based compilation/testing.
+-   `scripts/testall.sh`: Run all implementations in sequence on chosen backend (Modal or local).
+    -   Usage: `./test_all.sh [modal|local]` (default is `modal`)
 
 ## Project Structure
 
